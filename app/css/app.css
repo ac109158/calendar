@@ -1,0 +1,147 @@
+/* app css stylesheet */
+body {
+  font-size: 2em; 
+  background-image: url('../img/bg5.jpg');
+}
+
+.wdBg {
+  background-image: url('../img/bg_wood.jpg');
+}
+
+.wdBg2 {
+  background-image: url('../img/bg_wood2.jpg');
+}
+
+.bg3 {
+  background-image: url('../img/bg3.jpg');
+  background-position: fixed;
+}
+
+.bg4 {
+  background-image: url('../img/bg4.jpg');
+}
+
+.bg5 {
+  background-image: url('../img/bg5.jpg');
+  position: relative;
+}
+.bg6 {
+  background-image: url('../img/bg6.jpg');
+}
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+.by7 {
+  width:13.13%;
+  margin-left:1%;
+  height:30px;
+  font-size: 1em;
+  line-height: .5em;
+   opacity: .9;
+}
+
+.by7h {
+  width:12.85%;
+  margin-left:1%;
+  height:30px;
+  font-size: 1em;
+  line-height: .5em;
+}
+
+.center {
+  position: relative;
+  width:320px;
+  min-width:20px;
+  margin:0px auto;
+}
+
+.slim {
+  margin: 0px;
+  padding: 0px;
+}
+
+.pad{
+  padding: 5px;
+}
+
+.fatpad{
+  padding: 0px 0px 0px  1.9%;
+}
+.left {
+  position: relative;
+  left:-3%;
+}
+
+.up {
+  position: relative;
+  top:-37px;
+  margin-bottom:-5%;
+}
+
+
+
+.large {
+  height:38px;
+  font-size: 1.25em;
+  line-height: .75em;
+}
+
+.floatLeft{
+  float: left;
+}
+
+.floatRight{
+  float: right;
+}
+.frame {
+  min-width: 1000px;
+}
+
+.dayStyle{
+  position: relative;
+  height: 125px;
+background-color: #fffde3;
+opacity:.75;
+}
+
+.pullUp {
+  margin-bottom: -.25%;
+}
+
+.spacer {
+  width:100%;
+  height:50px;
+}
+
+.fixed {
+  position: fixed;
+  width:100%;
+  z-index: 1;
+  border:none;
+}

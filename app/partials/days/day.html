@@ -1,0 +1,13 @@
+<div class="row" style="margin-top:50px">
+</div>
+<div class=" media floatLeft by7 dayStyle" ng-controller="DayCtrl" ng-repeat="day in days">
+	<div class="pad" ng-controller="DayCtrl" >
+		<a href="#/day?id={{day.date}}" class=" pull-right badge" href="#">
+			<span  style="font-size: 14pt;">{{ day.date }}</span>
+		</a>
+		<div class="media-body">
+			<h4 class="media-heading">{{day.month}}</h4>
+		</div>
+	</div>	
+</div>
+

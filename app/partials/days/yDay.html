@@ -1,0 +1,18 @@
+<div class="row" style="margin-top:50px">
+	<select type="text" ng-model='day.date'>
+		<option value='January'>January</option>
+		<option value='February'>February</option>
+		<option value='March'>March</option>
+	</select>
+</div>
+<!-- <div class=" media floatLeft by7 dayStyle" ng-repeat="day in days | filter:day.date"> -->
+<div class=" media floatLeft by7 dayStyle" ng-repeat="day in days">
+	<div class="pad" >
+		<a class=" pull-right badge" href="#">
+			<span  style="font-size: 14pt;">{{ day.date }}</span>
+		</a>
+		<div class="media-body">
+			<h4 class="media-heading">{{day.month}}</h4>
+		</div>
+	</div>	
+</div>
