@@ -19,7 +19,7 @@ sandbox implementation varies between browsers, but quite often prevents things 
 etc to function properly when an html page is opened via `file://` scheme instead of `http://`._
 
 
-## How to use angular-seed
+## How to use angular-seeed
 
 Clone the angular-seed repository and start hacking...
 
