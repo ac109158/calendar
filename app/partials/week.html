@@ -1,4 +1,95 @@
+<div class="spacer"></div>
 <daybar></daybar>
+<div class="spacer"></div>
+
+
+
 <div class="row">
-	
+    <div class="col-lg-10 col-lg-offset-1">
+	<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
+		<div>
+			<h4>Dynamic</h4>
+			<div>Dynamic Popover : <input type="text" ng-model="dynamicPopoverText"></div>
+			<div>Dynamic Popover Popup Text: <input type="text" ng-model="dynamicPopover"></div>
+			<div>Dynamic Popover Popup Title: <input type="text" ng-model="dynamicPopoverTitle"></div>
+				<div>
+					<button popover="{{dynamicPopover}}" popover-title="{{dynamicPopoverTitle}}" class="btn">{{dynamicPopoverText}}</button>
+				</div>
+			</div>
+			<div>
+				<h4>Positional</h4>
+				<button popover-placement="top" popover="On the Top!" class="btn">Top</button>
+				<button popover-placement="left" popover="On the Left!" class="btn">Left</button>
+				<button popover-placement="right" popover="On the Right!" class="btn">Right</button>
+				<button popover-placement="bottom" popover="On the Bottom!" class="btn">Bottom</button>
+			</div>
+			<div>
+				<h4>Triggers</h4>
+				<button popover="I appeared on mouse enter!" popover-trigger="mouseenter" class="btn">Mouseenter</button>
+				<input type="text" value="Click me!" 
+				popover="I appeared on focus! Click away and I'll vanish..." 
+				popover-trigger="focus" />
+			</div>
+			<div>
+				<h4>Other</h4>
+				<button Popover-animation="true" popover="I fade in and out!" class="btn">fading</button>
+				<button popover="I have a title!" popover-title="The title." class="btn">title</button>
+			</div>
+		</div>
+	</div>
 </div>
+
+<div class="spacer"></div>
+
+
+<div class="container">
+	<pre>Selected date is: <em>{{dt | date:'fullDate' }}</em></pre>
+
+	<div class="well well-small pull-left" ng-model="dt">
+		<datepicker min="minDate" show-weeks="showWeeks"></datepicker>
+	</div>
+
+	<div class="form-horizontal">
+		<input type="text" datepicker-popup="dd-MMMM-yyyy" ng-model="dt" is-open="opened" min="minDate" max="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" />
+		<button class="btn" ng-click="open()"><i class="icon-calendar"></i></button>
+	</div>
+
+	<hr />
+	<button class="btn btn-small btn-inverse" ng-click="today()">Today</button>
+	<button class="btn btn-small btn-inverse" ng-click="dt = '2009-08-24'">2009-08-24</button>
+	<button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
+	<button class="btn btn-small btn-danger" ng-click="clear()">Clear</button>
+	<button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
+</div>
+
+
+<div class="container">
+	<div class="row">
+		<div style="max-width:100px; max-height:50px;">
+			<div ng-model="mytime" ng-change="changed()" class="" style="display:inline-block;">
+				<timepicker hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+			</div>			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
+			<pre>Time is: {{mytime | date:'shortTime' }}</pre>
+
+			<div>Hours step is: <select ng-model="hstep" ng-options="opt for opt in options.hstep"></select></div>
+			<div>Minutes step is: <select ng-model="mstep" ng-options="opt for opt in options.mstep"></select></div>
+
+			<button class="btn" ng-click="toggleMode()">12H / 24H</button>
+			<button class="btn" ng-click="update()">Set to 14:00</button>
+			<button class="btn btn-danger" ng-click="clear()">Clear</button>		
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
+
+
+
+
+

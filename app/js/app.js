@@ -4,6 +4,8 @@
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
   'ngRoute',
+  // '$strap.directives',
+  'ui.bootstrap',
   'myApp.filters',
   'myApp.services',
   'myApp.directives',
@@ -213,7 +215,7 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 				var newDay = {};
 				newDay.date =  beforeFirstDay;
 				newDay.month =  monthsOfThisYear[prevMonth][1];
-				newDay.monthBlock = month + monthsOfThisYear[month][1];
+				newDay.monthBlock = prevMonth;
 				newDay.year = prevYear;
 				newDay.yearBlock = year;
 				newDay.weekday = DayNameService[beforeFirstDay];
@@ -226,10 +228,11 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 			var newDay = {};
 			newDay.date = new Date(year, month, mday).getDate();
 			newDay.month = monthsOfThisYear[month][1];
-			newDay.monthBlock = month + monthsOfThisYear[month][1];
+			newDay.monthBlock = month;
 			newDay.year = year;
 			newDay.yearBlock = year;
-			newDay.events = EventFactory.fetchDay(newDay.date, month, year, 'userEvents');
+			//newDay.events = EventFactory.fetchDay(newDay.date, month, year, 'userEvents');
+			newDay.events = [{title:'Event1', details:"Event 1 details" }, {title:'Event2', details:"Event 2 details" }, {title:'Event3', details:"Event 3 details" }];
 			newDay.weekday = DayNameService[new Date(year, month, mday).getDay()] ;
 			monthArray.push(newDay);
 		}
@@ -252,7 +255,7 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 			var newDay = {};
 			newDay.date = new Date(nextYear, nextMonth, nday).getDate();
 			newDay.month = monthsOfThisYear[nextMonth][1];
-			newDay.monthBlock = month + monthsOfThisYear[month][1];
+			newDay.monthBlock = nextMonth;
 			newDay.year = nextYear;
 			newDay.yearBlock = year;
 			newDay.weekday = DayNameService[new Date(nextYear, nextMonth, nday).getDay()] ;
@@ -265,7 +268,7 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
     	return DaysOfMonthFactory;
 }]).
 factory("DayNameService", function () {
-    var dayNames = ["Sunday","Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var dayNames = ["Sunday","Monday", "Tuesday", " Wednesday", "Thursday", "Friday", "Saturday"];
     return dayNames;
 }).
 service("grid", ['MonthFactory', 'DateFactory', function (MonthFactory, DateFactory) 
@@ -486,12 +489,16 @@ service('EventStorageService', [function () {
 	{
 		console.log(String(fetchYear).slice(2) );
 		console.log('fetchDay calle with Day: ' + fetchDay + ' Month: ' + fetchMonth + " Year: " + fetchYear);
-		if  (parseInt(fetchDay) in this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ] )
+		if ( angular.isDefined(this.root[src]) && angular.isDefined(this.root[src][ String(fetchYear).slice(2) ] )&& angular.isDefined(this.root[src][ String(fetchYear).slice(2) ][fetchMonth] ) )
 		{
-			return this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ][ parseInt(fetchDay) ] ;	
+			if  (parseInt(fetchDay) in this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ] )
+			{
+				return this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ][ parseInt(fetchDay) ] ;	
+			}
 		}
 		return null;
 	}
+
 	return EventStorage;	
 }]).
 factory('EventFactory', ['EventStorageService' , function (EventStorageService) {
@@ -508,7 +515,7 @@ config(['$routeProvider','$locationProvider',  function($routeProvider, $locatio
   $routeProvider.when('/year', {templateUrl: 'partials/year.html', controller: 'YearCtrl'});
   $routeProvider.when('/month', {templateUrl: 'partials/month.html', controller: 'MonthCtrl'});
   $routeProvider.when('/month/:month/:year', {templateUrl: 'partials/month.html', controller: 'YearCtrl'});
-  $routeProvider.when('/week', {templateUrl: 'partials/week.html', controller: 'YearCtrl'});
+  $routeProvider.when('/week', {templateUrl: 'partials/week.html', controller: 'WeekCtrl'});
   $routeProvider.when('/day', {templateUrl: 'partials/day.html', controller: 'YearCtrl'});
   // $routeProvider.otherwise({redirectTo: '/view1'});
 }]);

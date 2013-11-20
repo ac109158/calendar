@@ -1,16 +1,68 @@
-<div class="row bg6" style="margin-top:50px; padding-bottom: 20px;">
+<div class="spacer"></div>
+<div id="MonthView" class="row " style="margin-top:5px; padding-bottom: 20px;">
 	<div class="row"></div>
+	<div class="floatLeft by7 dayStyle" ng-mouseover="alert('hi')" ng-repeat="day in days">
+		<div class=" pad" >
+			<div ng-if=" day.monthBlock == calendarMonth" >
+				<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 slim">
+					<div class="btn-group-vertical">
+						  <button type="button" class="btn btn-danger  col-xs-12 col-sm-12 col-md-12 col-lg-12">{{ day.date }}</button>
+						  <button  type="button" class="btn btn-default glyphicon glyphicon-pushpin col-xs-12 col-sm-12 col-md-12 col-lg-12 " bs-Popover="popover"></button>
+						  <!-- <button type="button" class=" add btn btn-default glyphicon glyphicon-check col-xs-12 col-sm-12 col-md-12 col-lg-12"></button> -->
+<!-- 						  <button style="position:relative;" type="button" class="btn" >...</button> -->
+					</div>
+				</div>
 
-<div class=" media floatLeft by7 dayStyle" ng-mouseover="alert('hi')" ng-repeat="day in days">
-	<div class="pad" >
-		<a href="#/day?id={{day.date}}" class=" pull-right badge" href="#">
-			<span  style="font-size: 14pt;">{{ day.date }}</span>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading">{{day.month}}</h4>
-<!-- 			<h4>{{day.monthBlock}}</h4> -->
-		</div>
-	</div>	
-</div>
+				<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 slim pad scrollContent " >
+					<p ng-repeat="event in day.events">
+						<span class="btn-sm btn-default"  bs-Popover="eventpopover" bs-Popover-trigger="mouseenter">{{event.title}}</span>
+					</p>
+					<p ng-repeat="event in day.events">
+						<span class="btn-sm btn-default"  bs-Popover="eventpopover" style="width:100%;" bs-Popover-trigger="mouseenter">{{event.title}}</span>
+					</p>
+				</div>
+			</div>
+			<a ng-if="day.month != calendarMonthName" href="#/day?id={{day.date}}" class=" vague col-xs-12 col-sm-12 col-md-12 col-lg-12  btn btn-default" href="#">
+				<span  class="text-center" style="font-size: 14pt;">{{day.month.slice(0,3) + " " +  day.date}}</span>
+			</a>
+			
+		</div>	
+	</div>
 <br>
 </div>
+<script>
+$(".popover").each(function() {
+    var $pElem= $(this);
+    $pElem.popover(
+        {
+            html: true,
+            trigger: 'manual',
+            title: getPopTitle($pElem.attr("id")),
+            content: getPopContent($pElem.attr("id"))
+        }
+    );
+});
+						
+$(".popover").click(function() {
+    var $pElem= $(this);
+    $(".popover").each(function() {
+        $currentPop= $(this);
+        if($currentPop.prop("id") != $pElem.prop("id")) {
+            $currentPop.popover('hide');
+        } 
+    });
+    $pElem.popover('show');
+});
+				
+function getPopTitle(target) {
+    return $("#" + target + "_content > div.popTitle").html();
+};
+		
+function getPopContent(target) {
+    return $("#" + target + "_content > div.popContent").html();
+};
+
+</script>
+
+
+

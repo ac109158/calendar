@@ -1,4 +1,4 @@
-/* app css stylesheet */
+  /* app css stylesheet */
 body {
   font-size: 2em; 
   background-image: url('../img/bg5.jpg');
@@ -27,6 +27,7 @@ body {
 }
 .bg6 {
   background-image: url('../img/bg6.jpg');
+  background-repeat: no-repeat;
 }
 .menu {
   list-style: none;
@@ -58,20 +59,24 @@ body {
 }
 
 .by7 {
+  position:relative;
   width:13.13%;
   margin-left:1%;
+  margin-bottom:1%;
   height:30px;
   font-size: 1em;
   line-height: .5em;
    opacity: .9;
+   z-index: -1;
 }
 
 .by7h {
   width:12.85%;
   margin-left:1%;
   height:30px;
-  font-size: 1em;
+  font-size: 1.2em;
   line-height: .5em;
+  font-weight: bold;
 }
 
 .center {
@@ -126,8 +131,8 @@ body {
 .dayStyle{
   position: relative;
   height: 125px;
-background-color: #fffde3;
-opacity:.75;
+  background-color: #23282E;
+  z-index: 0;
 }
 
 .pullUp {
@@ -140,8 +145,87 @@ opacity:.75;
 }
 
 .fixed {
-  position: fixed;
-  width:100%;
+  position:fixed;
   z-index: 1;
-  border:none;
+  width:100%;
+
+}
+
+p {
+  font-size: 14px;
+  color: white;
+}
+
+.morph {
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+}
+ 
+.morph:hover {
+  border-radius: 50%;
+  -webkit-transform: rotate(360deg);
+     -moz-transform: rotate(360deg);
+       -o-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+          transform: rotate(360deg);
+}
+
+/*TILT*/
+.tilt {
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+}
+ 
+.tilt:hover {
+  -webkit-transform: rotate(-10deg);
+     -moz-transform: rotate(-10deg);
+       -o-transform: rotate(-10deg);
+      -ms-transform: rotate(-10deg);
+          transform: rotate(-10deg);
+}
+.nav, .pagination, .carousel a { cursor: pointer; } 
+
+.vague{
+  opacity: .2;
+}
+
+.apparent{
+  width:35px;
+  height:22px;
+  opacity: .4;
+  background: white;
+}
+
+.apparent2{
+  width:35px;
+  height:22px;
+  opacity: .4;
+  background: white;
+}
+.vague:hover{
+  opacity: .8;
+}
+
+.scrollContent {
+  position: relative;
+  height: 115px;
+  overflow-y: auto;
+}
+
+.onTop {
+}
+
+.shrink {
+  width:100%;
+  height:0px;
+  margin-bottom: -50px;
+}
+
+.popover {
 }
