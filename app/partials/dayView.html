@@ -1,0 +1,26 @@
+<div class="spacer"></div>
+<div class="spacer"></div>
+<div class="shrink"></div>
+<div class='row'>
+    <div style="width:320px; height:300px; font-size:10em;line-height: 1em; background: #39B3D7; color:white;" class="jumbotron text-center pull-left">
+        <p class="pull-left affix-top">{{calendarMonthName}}</p>
+        {{calendarDay}}
+        <p class="pull-right affix-bottom">{{calendarYear}}</p>
+    </div>
+</div>
+
+<div class='row'>
+    <div class="well slim" style=" height:325px; width:320px;">
+    <div class="pull-left" ng-model="dt">
+    <div style="height:285px;">
+        <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
+    </div>
+    <div>
+        <button class="btn btn-small btn-inverse" ng-click="today()">Today</button>
+        <!-- <button class="btn btn-small btn-inverse" ng-click="dt = '2009-08-24'">2009-08-24</button> -->
+        <button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">W</button>
+        <button class="btn btn-small btn-danger" ng-click="clear()">Clear</button>
+        <!-- <button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button> -->
+    </div>
+</div>
+</div>

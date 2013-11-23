@@ -100,7 +100,7 @@ body {
 }
 .left {
   position: relative;
-  left:-3%;
+  left:-1.5%;
 }
 
 .up {
@@ -228,4 +228,8 @@ p {
 }
 
 .popover {
+}
+
+.white {
+  background-color:white;
 }

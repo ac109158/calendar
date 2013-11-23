@@ -8,31 +8,53 @@ angular.module('myApp.controllers', []).
 //       $templateCache.removeAll();
 //    });
 // }]).
-controller('calendarHeaderCtrl', ['$scope','$location','$route','$templateCache' ,'$routeParams', 'DateFactory','DayNameService', 'MonthFactory', function DayCtrl($scope,$location, $templateCache, $routeParams,$route, DateFactory, DayNameService, MonthFactory) {
+controller('calendarHeaderCtrl', ['$scope','$location','$route','$templateCache' ,'$routeParams', 'DateFactory','DayNameService', 'MonthFactory', function DayCtrl($scope, $location, $route, $templateCache, $routeParams, DateFactory, DayNameService, MonthFactory) {
 	$scope.calendarYear =  DateFactory.getCalendarYear();
 	$scope.monthsInYear = MonthFactory.getMonths($scope.calendarYear);
 	$scope.daysInWeek = DayNameService;
 	$scope.calendarMonth = DateFactory.getCalendarMonth();
 	$scope.calendarMonthName = $scope.monthsInYear[$scope.calendarMonth][1];
 	$scope.monthLength = $scope.monthsInYear[$scope.calendarMonth ][0];
+	$scope.calendarDay = DateFactory.getCalendarDay();
 
+    $scope.$on('monthChange', function($scope) {
+        $scope.calendarMonth =  DateFactory.getCalendarMonth();
+        //$scope.reload();
+        console.log('month change');
+    });
+    
 	$scope.changeMonth = function(mon) 
 	{
 		console.log('calendarHeaderCtrl.changeMonth');
 		if ( mon > 0)
 		{
 			DateFactory.SetCalendarDateToNextMonth();
-			$scope.calendarMonth = DateFactory.getCalendarMonth();
-			$scope.calendarYear =  DateFactory.getCalendarYear();
-			$location.refresh();
 		}
 		else
 		{
 			DateFactory.SetCalendarDateToPrevMonth();
-			$scope.calendarMonth = DateFactory.getCalendarMonth();
-			$scope.calendarYear =  DateFactory.getCalendarYear();
-			$location.refresh();
 		}
+        $scope.calendarMonth = DateFactory.getCalendarMonth();
+        $scope.calendarYear =  DateFactory.getCalendarYear();
+	    $scope.calendarMonthName = $scope.monthsInYear[$scope.calendarMonth][1];
+        $scope.calendarDay = DateFactory.getCalendarDay();
+        $route.reload();
+	}
+
+	$scope.changeYear = function(yr) 
+	{
+		console.log('calendarHeaderCtrl.changeYear');
+		if ( yr > 0)
+		{
+			DateFactory.SetCalendarYearToNextYear();
+		}
+		else
+		{
+			DateFactory.SetCalendarYearToPrevYear();
+		}
+        
+        $scope.calendarYear =  DateFactory.getCalendarYear();
+        $route.reload();
 	}
 
 	$scope.go = function ( path ) 
@@ -48,7 +70,9 @@ controller('YearCtrl', ['$scope','grid', function YearCtrl($scope, grid) {
 	console.log('This is the YearCtrl');
 	$scope.days = grid;
 }]).
-controller('MonthCtrl', ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactory', 'DateFactory','$location', '$route', '$log', function MonthCtrl($scope, $window, MonthFactory,  DaysOfMonthFactory, DateFactory, $location, $route, $log) {
+controller('MonthCtrl', 
+        ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactory', 'DateFactory','$location', '$route', '$log', 
+        function MonthCtrl($scope, $window, MonthFactory,  DaysOfMonthFactory, DateFactory, $location, $route, $log) {
 	$scope.calendarMonth = DateFactory.getCalendarMonth();
 	$scope.today = {month: new Date().getMonth(), date : new Date().getDate(), year: new Date().getFullYear() };
 	$scope.monthsInYear = MonthFactory.getMonths($scope.calendarYear);
@@ -77,8 +101,9 @@ controller('MonthCtrl', ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactor
 			$scope.calendarMonth = DateFactory.getCalendarMonth();
 			$scope.calendarYear =  DateFactory.getCalendarYear();
 			$scope.calendarMonthName = $scope.monthsInYear[$scope.calendarMonth][1];
-			$scope.days = new DaysOfMonthFactory.getDaysofMonth($scope.calendarMonth, $scope.calendarYear, 'ChangeMonth');
+//			$scope.days = new DaysOfMonthFactory.getDaysofMonth($scope.calendarMonth, $scope.calendarYear, 'ChangeMonth');
 			console.log($scope.days);
+            $scope.$emit('monthChange, mon');
 			$route.reload();
 		}
 		else
@@ -87,7 +112,7 @@ controller('MonthCtrl', ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactor
 			$scope.calendarMonth = DateFactory.getCalendarMonth();
 			$scope.calendarYear =  DateFactory.getCalendarYear();
 			$scope.calendarMonthName = $scope.monthsInYear[$scope.calendarMonth][1];
-			$scope.days = new DaysOfMonthFactory.getDaysofMonth($scope.calendarMonth, $scope.calendarYear, 'ChangeMonth');
+//			$scope.days = new DaysOfMonthFactory.getDaysofMonth($scope.calendarMonth, $scope.calendarYear, 'ChangeMonth');
 			console.log($scope.days);
 			$route.reload();
 		}
@@ -124,7 +149,7 @@ controller('MonthCtrl', ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactor
 
 
 }]).
-controller('WeekCtrl', ['$scope', '$timeout', function DayCtrl($scope, $timeout) {
+controller('WeekCtrl', ['$scope', '$timeout', function WeekCtrl($scope, $timeout) {
  	$scope.dynamicPopover = "Hello, World!";
 	$scope.dynamicPopoverText = "dynamic";
 	$scope.dynamicPopoverTitle = {
@@ -167,7 +192,7 @@ controller('WeekCtrl', ['$scope', '$timeout', function DayCtrl($scope, $timeout)
 	  $scope.opened = true;
 	});
 	};
-
+    
 	$scope.dateOptions = {
 	'year-format': "'yy'",
 	'starting-day': 1
@@ -203,8 +228,52 @@ controller('WeekCtrl', ['$scope', '$timeout', function DayCtrl($scope, $timeout)
 		$scope.mytime = null;
 	};
 }]).
-controller('DayCtrl', ['$scope','grid', function DayCtrl($scope, grid) {
-	$scope.days = grid;
+controller('DayCtrl', ['$scope','DateFactory', function DayCtrl($scope,DateFactory) {
+	$scope.today = function() 
+	{
+		$scope.dt = new Date();
+	};
+
+	$scope.today();
+
+	$scope.showWeeks = false;
+
+	$scope.toggleWeeks = function () 
+	{
+		$scope.showWeeks = ! $scope.showWeeks;
+	};
+
+	$scope.clear = function () {
+	$scope.dt = null;
+	};
+
+	// Disable weekend selection
+	$scope.disabled = function(date, mode) {
+	return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+	};
+
+	$scope.toggleMin = function() {
+	$scope.minDate = ( $scope.minDate ) ? null : new Date() - 1000*60*60*24*90;
+	};
+	$scope.toggleMin();
+
+	$scope.open = function() {
+	$timeout(function() {
+	  $scope.opened = true;
+	});
+	};
+
+	$scope.dateOptions = {
+	'year-format': "'yy'",
+	'starting-day': 1
+	};
+
+    
+    $scope.changeDay = function(dt) {
+        alert('detected');
+        DateFactory.setCalendarDay(dt);
+    };
+
 }]).
 controller('StorageCtrl', ['EventStorageService', function() {
 	

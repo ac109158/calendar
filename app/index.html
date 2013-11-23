@@ -10,13 +10,13 @@
 
 
 </head>
-<body  class="frame container col-xs-12 col-sm-12 col-md-12 col-lg-12 bg6">
+<body  class="frame container col-xs-12 col-sm-12 col-md-12 col-lg-12 bg6" ng-controller="calendarHeaderCtrl">
 	<nav class="navbar navbar-default navbar-fixed-top bg4" role="navigation">
 		<!-- <div class="page-header slim">  	
 		<h1>Angular Calendar</h1>
 		<center>Calendar</center>
 		</div> -->
-		<div class="row pad frame" ng-controller="MonthCtrl">
+		<div class="row pad frame" >
 			<div <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 				<button type="button" class="btn btn-default glyphicon glyphicon-list"></button>
 				<button type="button" class="btn btn-default glyphicon glyphicon-plus"></button>
@@ -34,7 +34,7 @@
 					<!-- <button ng-click="go('/agenda')" type="button" class="btn btn-default ">Agenda</button> -->
 				</div>
 			</div> <!-- end of  center div-->
-			<span  class=" btn btn-danger  col-xs-3 col-sm-3 col-md-3 col-lg-3 left up floatRight large">{{calendarMonthName}} {{calendarYear}}</span>
+			<span  style="width:320px;" class=" btn btn-danger left up floatRight large">{{calendarMonthName}} {{calendarYear}}</span>
 		</div> <!-- end of  navbar-->
 	</nav>
 <ng-view>

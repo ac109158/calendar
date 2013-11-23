@@ -26,6 +26,7 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		// console.log('getCalendarYear has been returned\n'); 
 		return calendarYear;
 	}
+
 	date.getCalendarMonth = function()
 	{
 		// console.log('getCalendarMonth is being called'); 
@@ -39,6 +40,21 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		}
 		// console.log('getCalendarMonth has been returned\n'); 
 		return calendarMonth;
+	}
+	
+    date.getCalendarDay = function()
+	{
+		// console.log('getCalendarDay is being called'); 
+		var calendarDay;
+		calendarDay = localStorage.getItem('calendarDay');
+		if (calendarDay == null)
+		{
+			calendarDay = new Date().getDate(); 
+			localStorage.setItem('calendarDay', calendarDay);
+			console.log('No calendarDay set, Date Factory has set calendarDay into localstorage as' + calendarDay );
+		}
+		// console.log('getCalendarDay has been returned\n'); 
+		return calendarDay;
 	}
 
 	date.SetCalendarDateToNextMonth = function()
@@ -55,8 +71,8 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		else {
 			localStorage.setItem('calendarMonth', ++currentMonth);	
 		}
-		console.log('SetCalendarDateToNextMonth set month to ' + localStorage.getItem('calendarMonth') + '& calendarYear is ' + localStorage.getItem('calendarYear') ) ;
 	}
+
 	date.SetCalendarDateToPrevMonth = function()
 	{
 		var currentMonth = localStorage.getItem('calendarMonth');
@@ -70,9 +86,28 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		else {
 			localStorage.setItem('calendarMonth', --currentMonth);
 		}
-		console.log('SetCalendarDateToPrevMonth set month to ' + localStorage.getItem('calendarMonth') + '& calendarYear is ' + localStorage.getItem('calendarYear') ) ;
 	}
-	return date;
+	
+    date.SetCalendarYearToNextYear = function()
+	{
+		var currentYear = localStorage.getItem('calendarYear');
+        localStorage.setItem('calendarYear', ++currentYear);	
+	}
+
+    date.SetCalendarYearToPrevYear = function()
+	{
+		var currentYear = localStorage.getItem('calendarYear');
+        localStorage.setItem('calendarYear', --currentYear);	
+	}
+
+    date.setCalendarDay = function(day)
+    {
+        localStorage.setItem('calendarDay', day);	
+        alert('calendar day set to' + day);
+    }
+        
+	
+return date;
 }]).
 factory('MonthFactory', function ()
 {  // This should  create an array of each month, and numbers of days in that month for a given year
@@ -81,7 +116,7 @@ factory('MonthFactory', function ()
 	MonthFactory.getMonths = function(year)
 	{
 		var monthsInYear = new Array;
-	    	monthsInYear[0] = [31, "January", year];
+	    monthsInYear[0] = [31, "January", year];
 		monthsInYear[1] = [28, "February", year];
 		monthsInYear[2] = [31, "March", year];
 		monthsInYear[3]= [30, "April", year];
@@ -102,88 +137,8 @@ factory('MonthFactory', function ()
 	 console.log('MonthFactory has been returned\n');
 	 return MonthFactory;
 }).
-// factory('daysInMonthBlock',['MonthFactory', 'DateFactory', 'dayNames', function (MonthFactory, DateFactory, dayNames) {
-// 	console.log('daysInMonthBlock has been requested'); // Right now this function builds out 35/42 days month blocks and pastes those together and returns that into on big flat linear array.
-// 	var days = new Array;  // days will contain all of the day objects for the entire day
-// 	var year = DateFactory.getCalendarYear();
-// 	var monthsInYear = MonthFactory.getMonths(DateFactory.getCalendarYear());
-// 	//alert(month);
-// 	for (var month = 0; month < 12; i++) 
-// 	{
-// 		var countOfDays = monthsInYear[month][0]; // get the total of days in the current month position
-// 		var monthArray = new Array; // stores an array of days in month
-// 		var firstDayOfMonth = new Date(year, month, 1).getDay();//  find the weekday of the first date of the month
-// 		if (firstDayOfMonth != 0)  // need to start the block on a sunday(0) 
-// 		{ 	// not = Sunday
-// 		var beforeFirstDay = new Date(year, month, 0).getDate();  //gets last day index of the last month
-// 		// console.log('beforeFirstDay is ' + beforeFirstDay);
-// 		for (var i = 0; i < firstDayOfMonth; i++)  // fill previous days back to Sunday
-// 		{
-// 			var prevMonth = parseInt(month) -1;
-// 			var prevYear = year; // Might stay the same as current year unless we are in January
-// 			if ( prevMonth  < 0) 
-// 			{ 
-// 				prevMonth = 11
-// 				prevYear = year--;
-// 			}
-// 			var newDay = {};
-// 			newDay.date =  beforeFirstDay;
-// 			newDay.month =  monthsInYear[prevMonth][1];
-// 			newDay.monthBlock = month + monthsInYear[month][1];
-// 			newDay.year = prevYear;
-// 			newDay.yearBlock = year;
-// 			newDay.weekday = dayNames[beforeFirstDay];
-// 			monthArray.unshift(newDay);
-// 			beforeFirstDay--;
-// 		}
-// 		}
-// 		for (var mday = 1; mday < countOfDays +1; mday++) 
-// 		{
-// 			var newDay = {};
-// 			newDay.date = new Date(year, month, mday).getDate();
-// 			newDay.month = monthsInYear[month][1];
-// 			newDay.monthBlock = month + monthsInYear[month][1];
-// 			newDay.year = year;
-// 			newDay.yearBlock = year;
-// 			newDay.weekday = dayNames[new Date(year, month, mday).getDay()] ;
-// 			monthArray.push(newDay);
-// 		}
-
-// 		var totalrow = Math.ceil(monthArray.length / 7);
-// 		var totaldays = totalrow * 7;
-// 		var daysneeded = totaldays - monthArray.length;
-// 		// alert(daysneeded);
-// 		var nextMonth = parseInt(month) + 1;
-// 		// alert('next month starts at' + nextMonth);
-// 		var nextYear = year;
-// 		if (nextMonth > 11)
-// 		{
-// 			nextMonth = 0;
-// 			nextYear++;
-// 		} 
-// 		// alert('The next month is ' +monthsInYear[nextMonth]);
-// 		for (var nday = 1; nday < daysneeded +1; nday++) 
-// 		{
-// 			var newDay = {};
-// 			newDay.date = new Date(nextYear, nextMonth, nday).getDate();
-// 			newDay.month = monthsInYear[nextMonth][1];
-// 			newDay.monthBlock = month + monthsInYear[month][1];
-// 			newDay.year = nextYear;
-// 			newDay.yearBlock = year;
-// 			newDay.weekday = dayNames[new Date(nextYear, nextMonth, nday).getDay()] ;
-// 			monthArray.push(newDay);
-// 		}
-// 		var length = monthArray.length;
-// 		for (var i = 0; i < length; i++) {
-// 		days.push(monthArray[i]);
-// 		}
-// 		month++;
-// 	}
-// 	console.log('daysInMonthBlock has been returned\n'); 
-//     	return days;
-// }]).
 factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', 'EventFactory', function (MonthFactory, DateFactory, DayNameService, EventFactory) {
-	console.log('DaysOfMonthFactory has been requested');
+	//console.log('DaysOfMonthFactory has been requested');
 	var DaysOfMonthFactory = {};
 	DaysOfMonthFactory.getDaysofMonth = function(month, year, src)
 	{
@@ -192,17 +147,17 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 		var month = month;
 		var year = year;
 		var monthsOfThisYear = MonthFactory.getMonths(year);
-		console.log('monthsOfThisYear: ' + monthsOfThisYear );
+		//console.log('monthsOfThisYear: ' + monthsOfThisYear );
 		var thisMonth = monthsOfThisYear[month];
-		console.log('thisMonth : ' + thisMonth  );
+		//console.log('thisMonth : ' + thisMonth  );
 		var daysinThisMonth = thisMonth[0];
-		console.log('daysinThisMonth: ' + daysinThisMonth);
+		//console.log('daysinThisMonth: ' + daysinThisMonth);
 		var monthArray = new Array; // stores an array of days in month
 		var firstDayOfThisMonth = new Date(year, month, 1).getDay();//  find the weekday of the first date of the month
 		if (firstDayOfThisMonth != 0)  // need to start the block on a sunday(0) 
 		{ 	// not = Sunday
 			var beforeFirstDay = new Date(year, month, 0).getDate();  //gets last day index of the last month
-			console.log('beforeFirstDay is ' + beforeFirstDay);
+			//console.log('beforeFirstDay is ' + beforeFirstDay);
 			for (var i = 0; i < firstDayOfThisMonth; i++)  // fill previous days back to Sunday
 			{
 				var prevMonth = parseInt(month) -1;
@@ -240,16 +195,16 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 		var totalrow = Math.ceil(monthArray.length / 7);
 		var totaldays = totalrow * 7;
 		var daysneeded = totaldays - monthArray.length;
-		console.log('Days needed to fill month block is: '  + daysneeded);
+		//console.log('Days needed to fill month block is: '  + daysneeded);
 		var nextMonth = parseInt(month) + 1;
-		console.log('The next month is: ' + nextMonth);
+		//console.log('The next month is: ' + nextMonth);
 		var nextYear = year;
 		if (nextMonth > 11)
 		{
 			nextMonth = 0;
 			nextYear++;
 		} 
-		console.log('The finalized next month is  ' +monthsOfThisYear[nextMonth] + '& nextYear is: ' +nextYear);
+		//console.log('The finalized next month is  ' +monthsOfThisYear[nextMonth] + '& nextYear is: ' +nextYear);
 		for (var nday = 1; nday < daysneeded +1; nday++) 
 		{
 			var newDay = {};
@@ -261,10 +216,10 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 			newDay.weekday = DayNameService[new Date(nextYear, nextMonth, nday).getDay()] ;
 			monthArray.push(newDay);
 		}
-		console.log('getDaysofMonth has been returned\n');
+		//console.log('getDaysofMonth has been returned\n');
 		return monthArray;
     	}
-    	console.log('getDaysofMonth has been returned\n');
+    	//console.log('getDaysofMonth has been returned\n');
     	return DaysOfMonthFactory;
 }]).
 factory("DayNameService", function () {
@@ -516,7 +471,7 @@ config(['$routeProvider','$locationProvider',  function($routeProvider, $locatio
   $routeProvider.when('/month', {templateUrl: 'partials/month.html', controller: 'MonthCtrl'});
   $routeProvider.when('/month/:month/:year', {templateUrl: 'partials/month.html', controller: 'YearCtrl'});
   $routeProvider.when('/week', {templateUrl: 'partials/week.html', controller: 'WeekCtrl'});
-  $routeProvider.when('/day', {templateUrl: 'partials/day.html', controller: 'YearCtrl'});
+  $routeProvider.when('/day', {templateUrl: 'partials/dayView.html', controller: 'DayCtrl'});
   // $routeProvider.otherwise({redirectTo: '/view1'});
 }]);
   
