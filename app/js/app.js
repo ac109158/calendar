@@ -42,7 +42,7 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		return calendarMonth;
 	}
 	
-    date.getCalendarDay = function()
+    	date.getCalendarDay = function()
 	{
 		// console.log('getCalendarDay is being called'); 
 		var calendarDay;
@@ -87,24 +87,40 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 			localStorage.setItem('calendarMonth', --currentMonth);
 		}
 	}
+
+	date.setCalendarMonth = function(month)
+	{
+		localStorage.setItem('calendarMonth', month);
+		return month;
+	}
 	
-    date.SetCalendarYearToNextYear = function()
+	date.SetCalendarYearToNextYear = function()
 	{
 		var currentYear = localStorage.getItem('calendarYear');
-        localStorage.setItem('calendarYear', ++currentYear);	
+	    localStorage.setItem('calendarYear', ++currentYear);	
 	}
 
-    date.SetCalendarYearToPrevYear = function()
+	date.SetCalendarYearToPrevYear = function()
 	{
 		var currentYear = localStorage.getItem('calendarYear');
-        localStorage.setItem('calendarYear', --currentYear);	
+	    localStorage.setItem('calendarYear', --currentYear);	
+	}
+	date.setCalendarYear = function(year)
+	{
+		localStorage.setItem('calendarYear', year);
+		return year;
 	}
 
-    date.setCalendarDay = function(day)
-    {
-        localStorage.setItem('calendarDay', day);	
-        alert('calendar day set to' + day);
-    }
+	date.setCalendarDay = function(day)
+	{
+	    localStorage.setItem('calendarDay', day);	
+	    return day;
+	}
+
+
+	date.hoursInDay = ['12am', '1am', '2am', '3am', '4am','5am', '6am', '7am', '8am','9am', '10am', '11am', 'Noon','1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm']
+
+	date.sectionInHour = [':00', ':15', ':30', ':45'];
         
 	
 return date;
@@ -355,7 +371,9 @@ service('EventStorageService', [function () {
 					{
 						return false;
 					}
-					var day = new Array;
+					var hour = Array.apply(null, new Array(4)).map(Array.prototype.valueOf,[]);
+					hour(4) = [];
+					var day= Array.apply(null, new Array(24)).map(Array.prototype.valueOf,hour);
 					this.root[src][ String(fullYearValue).slice(2) ][ parseInt(monthValue) ] [ parseInt(dayValue) ] = day;
 					return true;
 				}
@@ -384,7 +402,7 @@ service('EventStorageService', [function () {
 					{
 						if (eventDay in this.root[src][ String(eventYear).slice(2) ][eventMonth])
 						{
-							this.root[src][ String(eventYear).slice(2) ][eventMonth][eventDay][event.key].push(event);
+							this.root[src][ String(eventYear).slice(2) ][eventMonth][eventDay][event.hour][event.key].push(event);
 							return true;
 						}
 					}

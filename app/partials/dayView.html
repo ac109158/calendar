@@ -1,26 +1,57 @@
 <div class="spacer"></div>
 <div class="spacer"></div>
 <div class="shrink"></div>
-<div class='row'>
-    <div style="width:320px; height:300px; font-size:10em;line-height: 1em; background: #39B3D7; color:white;" class="jumbotron text-center pull-left">
-        <p class="pull-left affix-top">{{calendarMonthName}}</p>
-        {{calendarDay}}
-        <p class="pull-right affix-bottom">{{calendarYear}}</p>
+<div class='row' ng-model="dt">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 well slim">
+        <div class='row slim'>
+            <div class="row">
+                <div class="btn-group col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">
+                    <button type="button" class="btn btn-default">Left</button>
+                    <button type="button" class="btn btn-default" ng-click="today()">Today</button>
+                    <button type="button" class="btn btn-default">Right</button>
+                </div>             
+            </div>
+            <div style="background: #39B3D7; height:300px; color:black;" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="row">
+                    <span class="pull-left">{{calendarMonth}}</span>
+                </div>
+                <div class="row">
+                    <span style="font-size:10em; line-height: 1.25em;" class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 text-center">{{calendarDay}}</span>
+                </div>
+                <div class="row">
+                    <span class="pull-right">{{calendarYear}}</span>
+                </div>
+            </div>
+        </div>
+        <div class=" slim col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:290px;padding-left: 5px;">
+            <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
+        </div>
     </div>
-</div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="height:630px; overflow-y: auto; color:black;">
+         <accordion close-others="true">
+            <accordion-group is-open="isopen" ng-repeat="hour in hours" heading="{{hour}}" >
+                <div class="row">
+                    <button type="button" class="btn-success glyphicon glyphicon-plus">Add</button>
+                </div>
+                <div style="color:black;" ng-repeat="event in events">{{event}}
+                </div>
+            </accordion-group>
+        </accordion>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 well slim" style="height:630px;">
+        <accordion close-others="true">
+            <accordion-group heading="Daily Agenda" >
+                <div style="color:black;" ng-repeat="event in events">{{event}}
+                </div>
+            </accordion-group>
 
-<div class='row'>
-    <div class="well slim" style=" height:325px; width:320px;">
-    <div class="pull-left" ng-model="dt">
-    <div style="height:285px;">
-        <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
+            <accordion-group  heading="Daily Tasks" >
+                <div style="color:black;">Task List</div>
+            </accordion-group>
+
+            <accordion-group  heading="Activity Feed" >
+                <div style="color:black;">Activity Feed</div>
+            </accordion-group>
+
     </div>
-    <div>
-        <button class="btn btn-small btn-inverse" ng-click="today()">Today</button>
-        <!-- <button class="btn btn-small btn-inverse" ng-click="dt = '2009-08-24'">2009-08-24</button> -->
-        <button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">W</button>
-        <button class="btn btn-small btn-danger" ng-click="clear()">Clear</button>
-        <!-- <button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button> -->
-    </div>
-</div>
 </div>

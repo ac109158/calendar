@@ -4,7 +4,7 @@
 
 
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-lg-10 col-lg-offset-1">
 	<div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3">
 		<div>
@@ -39,10 +39,10 @@
 	</div>
 </div>
 
-<div class="spacer"></div>
+<div class="spacer"></div> -->
 
 
-<div class="container">
+<!-- <div class="container">
 	<pre>Selected date is: <em>{{dt | date:'fullDate' }}</em></pre>
 
 	<div class="well well-small pull-left" ng-model="dt">
@@ -60,10 +60,10 @@
 	<button class="btn btn-small btn-success" ng-click="toggleWeeks()" tooltip="For inline datepicker">Toggle Weeks</button>
 	<button class="btn btn-small btn-danger" ng-click="clear()">Clear</button>
 	<button class="btn btn-small" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
-</div>
+</div> -->
 
 
-<div class="container">
+<!-- <div class="container">
 	<div class="row">
 		<div style="max-width:100px; max-height:50px;">
 			<div ng-model="mytime" ng-change="changed()" class="" style="display:inline-block;">
@@ -84,6 +84,39 @@
 			<button class="btn btn-danger" ng-click="clear()">Clear</button>		
 		</div>
 	</div>
+</div> -->
+
+<div class="container" style="background:#ccc">
+
+
+
+<label class="checkbox">
+<input type="checkbox" ng-model="oneAtATime">
+Open only one at a time
+</label>
+
+<accordion close-others="oneAtATime">
+<accordion-group heading="Static Header, initially expanded" is-open="isopen">
+This content is straight in the template.
+</accordion-group>
+<accordion-group heading="{{group.title}}" ng-repeat="group in groups">
+{{group.content}}
+</accordion-group>
+<accordion-group heading="Dynamic Body Content">
+<p>The body of the accordion group grows to fit the contents</p>
+<button class="btn btn-small" ng-click="addItem()">Add Item</button>
+<div ng-repeat="item in items">{{item}}</div>
+</accordion-group>
+<accordion-group is-open="isopen">
+<accordion-heading>
+I can have markup, too! <i class="pull-right" ng-class="glyphicon glyphicon-chevron-down"></i>
+</accordion-heading>
+This is just some content to illustrate fancy headings.
+</accordion-group>
+</accordion>
+
+
+</div>
 </div>
 </div>
 </div>

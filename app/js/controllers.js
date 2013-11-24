@@ -227,12 +227,36 @@ controller('WeekCtrl', ['$scope', '$timeout', function WeekCtrl($scope, $timeout
 	$scope.clear = function() {
 		$scope.mytime = null;
 	};
+
+	$scope.oneAtATime = true;
+
+	$scope.groups = [
+	{
+	title: "Dynamic Group Header - 1",
+	content: "Dynamic Group Body - 1"
+	},
+	{
+	title: "Dynamic Group Header - 2",
+	content: "Dynamic Group Body - 2"
+	}
+	];
+
+	$scope.items = ['Item 1', 'Item 2', 'Item 3'];
+
+	$scope.addItem = function() {
+	var newItemNo = $scope.items.length + 1;
+	$scope.items.push('Item ' + newItemNo);
+	};
 }]).
-controller('DayCtrl', ['$scope','DateFactory', function DayCtrl($scope,DateFactory) {
+controller('DayCtrl', ['$scope','DateFactory', 'EventFactory', function DayCtrl($scope,DateFactory, EventFactory) {
+	$scope.source = 'userEvents';
+	$scope.hours = DateFactory.hoursInDay;
+	$scope.hourSection = DateFactory.sectionInHour;
 	$scope.today = function() 
 	{
 		$scope.dt = new Date();
 	};
+	$scope.events = ['Event 1', "Event 2", "Event 3"];
 
 	$scope.today();
 
@@ -268,11 +292,17 @@ controller('DayCtrl', ['$scope','DateFactory', function DayCtrl($scope,DateFacto
 	'starting-day': 1
 	};
 
-    
-    $scope.changeDay = function(dt) {
-        alert('detected');
-        DateFactory.setCalendarDay(dt);
-    };
+	$scope.$watch('dt', function() {
+	   $scope.updateCalendar($scope.dt)
+	});
+
+	$scope.updateCalendar = function(dt) {
+		$scope.calendarYear = DateFactory.setCalendarYear(new Date(dt).getFullYear());
+		$scope.calendarMonth = DateFactory.setCalendarMonth(new Date(dt).getMonth());
+		$scope.calendarDay = DateFactory.setCalendarDay(new Date(dt).getDate());
+		// $scope.events = EventFactory.fetchDay($scope.calendarDay, $scope.calendarMonth, $scope.calendarYear, '$scope.src');
+		$scope.events = ['Event 1' + $scope.calendarDay, "Event 2" + $scope.calendarDay, "Event 3" + $scope.calendarDay];
+	};
 
 }]).
 controller('StorageCtrl', ['EventStorageService', function() {
