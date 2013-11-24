@@ -1,7 +1,7 @@
 <div class="spacer"></div>
 <div class="spacer"></div>
 <div class="shrink"></div>
-<div class='row' ng-model="dt">
+<div class='row' ng-model="dt" style="background:#355162; min-height: 700px; height:100%;">
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 well slim">
         <div class='row slim'>
             <div class="row">
@@ -23,17 +23,17 @@
                 </div>
             </div>
         </div>
-        <div class=" slim col-xs-12 col-sm-12 col-md-12 col-lg-12" style="height:290px;padding-left: 5px;">
+        <div class="" style="height:290px;width:300px; margin:0px auto;">
             <datepicker min="minDate" show-weeks="showWeeks"></datepicker>
         </div>
     </div>
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="height:630px; overflow-y: auto; color:black;">
          <accordion close-others="true">
             <accordion-group is-open="isopen" ng-repeat="hour in hours" heading="{{hour}}" >
+                <div style="color:black;" ng-repeat="event in events">{{event}}
+                </div>
                 <div class="row">
                     <button type="button" class="btn-success glyphicon glyphicon-plus">Add</button>
-                </div>
-                <div style="color:black;" ng-repeat="event in events">{{event}}
                 </div>
             </accordion-group>
         </accordion>
@@ -52,6 +52,29 @@
             <accordion-group  heading="Activity Feed" >
                 <div style="color:black;">Activity Feed</div>
             </accordion-group>
+            <div class="">
+            <form role="form">
+              <div class="form-group">
+                <label for="title">Title</label>
+                <input type="title" class="form-control" id="title" placeholder="Enter Title">
+              </div>
+              <div class="form-group">
+                <label for="detail">Details</label>
+                <textarea class="form-control" rows="3" cols="30"></textarea>
+              </div>
+                <div class="form-group">
+                    <div ng-model="starttime"  ng-change="changed()" class="pull-right col-xs-6 col-sm-6 col-md-6 col-lg-6 pad">
+                    <timepicker hour-step="1" minute-step="5" show-meridian="ismeridian"></timepicker>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <div ng-model="endtime" ng-change="changed()" class="pull-right col-xs-6 col-sm-6 col-md-6 col-lg-6 pad">
+                    <timepicker  ng-init="label = 'Start'" hour-step="1" minute-step="5" show-meridian="ismeridian"></timepicker>
+                    </div>
+                </div>
+              <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            </div>
 
     </div>
 </div>

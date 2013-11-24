@@ -124,7 +124,7 @@ controller('MonthCtrl',
 
 	$scope.popover = {
 		title: '{{day.month + " "+ day.date + ", " + day.year}}',
-		content: '<div style="width:200px; height:250px; position:relative; opacity:1; z-index:4;"  class=" slim"><div ng-input="day.year"></div>{{day.month + " "+ day.date}}</div>', 
+		content: ' <form novalidate class="simple-form"><input type="text" placeholder="Title" ng-model="event.title" /><br />E-mail: <input type="email" ng-model="user.email" /><br />Gender: <input type="radio" ng-model="user.gender" value="male" />male<input type="radio" ng-model="user.gender" value="female" />female<br /><button ng-click="reset()">RESET</button><button ng-click="update(user)">SAVE</button></form>', 
 		container: '#MonthView', 
 		placement:'auto', 
 		saved:false
@@ -291,6 +291,38 @@ controller('DayCtrl', ['$scope','DateFactory', 'EventFactory', function DayCtrl(
 	'year-format': "'yy'",
 	'starting-day': 1
 	};
+
+	 $scope.mytime = new Date();
+
+	  $scope.hstep = 1;
+	  $scope.mstep = 15;
+
+	  $scope.options = {
+	    hstep: [1, 2, 3],
+	    mstep: [1, 5, 10, 15, 25, 30]
+	  };
+
+	  $scope.ismeridian = true;
+	  $scope.toggleMode = function() {
+	    $scope.ismeridian = ! $scope.ismeridian;
+	  };
+
+	  $scope.update = function() {
+	    var d = new Date();
+	    d.setHours( 12 );
+	    d.setMinutes( 0 );
+	    $scope.mytime = d;
+	  };
+
+	  $scope.update();
+
+	  $scope.changed = function () {
+	    console.log('Time changed to: ' + $scope.mytime);
+	  };
+
+	  $scope.clear = function() {
+	    $scope.mytime = null;
+	  };
 
 	$scope.$watch('dt', function() {
 	   $scope.updateCalendar($scope.dt)
