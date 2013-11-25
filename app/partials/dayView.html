@@ -29,7 +29,7 @@
     </div>
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="height:630px; overflow-y: auto; color:black;">
          <accordion close-others="true">
-            <accordion-group is-open="isopen" ng-repeat="hour in hours" heading="{{hour}}" >
+            <accordion-group is-open="isopen" ng-repeat="hour in hoursofday" heading="{{hour}}" >
                 <div style="color:black;" ng-repeat="event in events">{{event}}
                 </div>
                 <div class="row">
@@ -53,26 +53,27 @@
                 <div style="color:black;">Activity Feed</div>
             </accordion-group>
             <div class="">
-            <form role="form">
+            <form role="form" ng-submit="addEvent(ev)">
               <div class="form-group">
                 <label for="title">Title</label>
-                <input type="title" class="form-control" id="title" placeholder="Enter Title">
+                <input type="title" class="form-control" id="title" ng-model="ev.title" placeholder="Enter Title">
               </div>
+
               <div class="form-group">
                 <label for="detail">Details</label>
-                <textarea class="form-control" rows="3" cols="30"></textarea>
+                <textarea class="form-control" ng-model="ev.details" rows="3" cols="30"></textarea>
               </div>
                 <div class="form-group">
-                    <div ng-model="starttime"  ng-change="changed()" class="pull-right col-xs-6 col-sm-6 col-md-6 col-lg-6 pad">
+                    <div ng-model="ev.start"  ng-change="changed()" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 pad">
                     <timepicker hour-step="1" minute-step="5" show-meridian="ismeridian"></timepicker>
                     </div>
                 </div>
                  <div class="form-group">
-                    <div ng-model="endtime" ng-change="changed()" class="pull-right col-xs-6 col-sm-6 col-md-6 col-lg-6 pad">
-                    <timepicker  ng-init="label = 'Start'" hour-step="1" minute-step="5" show-meridian="ismeridian"></timepicker>
+                    <div ng-model="ev.end" ng-change="changed()" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 pad">
+                    <timepicker label='Start' hour-step="1" minute-step="5" show-meridian="ismeridian"></timepicker>
                     </div>
                 </div>
-              <button type="submit" class="btn btn-default">Submit</button>
+              <button type="submit" class="btn btn-default" value="Submit">Submit</button>
             </form>
             </div>
 

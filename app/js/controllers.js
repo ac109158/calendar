@@ -248,15 +248,15 @@ controller('WeekCtrl', ['$scope', '$timeout', function WeekCtrl($scope, $timeout
 	$scope.items.push('Item ' + newItemNo);
 	};
 }]).
-controller('DayCtrl', ['$scope','DateFactory', 'EventFactory', function DayCtrl($scope,DateFactory, EventFactory) {
+controller('DayCtrl', ['$scope','$route', 'DateFactory', 'EventFactory', function DayCtrl($scope, $route, DateFactory, EventFactory) {
 	$scope.source = 'userEvents';
-	$scope.hours = DateFactory.hoursInDay;
+	$scope.hoursofday = DateFactory.hoursInDay;
 	$scope.hourSection = DateFactory.sectionInHour;
 	$scope.today = function() 
 	{
 		$scope.dt = new Date();
 	};
-	$scope.events = ['Event 1', "Event 2", "Event 3"];
+	// $scope.events = ['Event 1', "Event 2", "Event 3"];
 
 	$scope.today();
 
@@ -314,8 +314,6 @@ controller('DayCtrl', ['$scope','DateFactory', 'EventFactory', function DayCtrl(
 	    $scope.mytime = d;
 	  };
 
-	  $scope.update();
-
 	  $scope.changed = function () {
 	    console.log('Time changed to: ' + $scope.mytime);
 	  };
@@ -334,7 +332,33 @@ controller('DayCtrl', ['$scope','DateFactory', 'EventFactory', function DayCtrl(
 		$scope.calendarDay = DateFactory.setCalendarDay(new Date(dt).getDate());
 		// $scope.events = EventFactory.fetchDay($scope.calendarDay, $scope.calendarMonth, $scope.calendarYear, '$scope.src');
 		$scope.events = ['Event 1' + $scope.calendarDay, "Event 2" + $scope.calendarDay, "Event 3" + $scope.calendarDay];
+		$scope.update();
 	};
+
+	$scope.ev = new Object;
+
+	$scope.addEvent = function(ev) {
+		if ( ev.title && ev.details) 
+	  	{
+	  		var newEvent = new Array;
+	  		newEvent['key'] = Math.random().toString(36).substring(7);
+	  		newEvent['title'] = ev.title;
+	  		newEvent['details'] = ev.details;
+	  		newEvent['src'] = "userEvents";
+	  		newEvent['start'] = ev.start;
+	  		newEvent['end'] = ev.end;
+	  		newEvent['hour'] = ev.start.getHours();
+	  		newEvent['day'] = $scope.calendarDay;
+	  		newEvent['month'] = $scope.calendarMonth;
+	  		newEvent['year'] = $scope.calendarYear
+			var result = EventFactory.addEvent(newEvent, true);
+			if (result === true) {
+				$route.reload();
+			}
+			console.log(result);
+	  	}
+		
+	}
 
 }]).
 controller('StorageCtrl', ['EventStorageService', function() {

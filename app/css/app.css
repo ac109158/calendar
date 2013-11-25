@@ -242,3 +242,7 @@ p {
 .white {
   background-color:white;
 }
+
+.block {
+  display: block;
+}
