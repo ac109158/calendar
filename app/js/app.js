@@ -41,8 +41,19 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		// console.log('getCalendarMonth has been returned\n'); 
 		return calendarMonth;
 	}
+
+	date.getCalendarMonthName = function()
+	{
+		// console.log('getCalendarMonth is being called'); 
+		return localStorage.getItem('calendarMonthName');
+	}
 	
-    	date.getCalendarDay = function()
+	date.setCalendarMonthName = function(monthName)
+	{
+		// console.log('getCalendarMonth is being called'); 
+		localStorage.setItem('calendarMonth', monthName);
+	}
+    date.getCalendarDay = function()
 	{
 		// console.log('getCalendarDay is being called'); 
 		var calendarDay;
@@ -55,6 +66,21 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 		}
 		// console.log('getCalendarDay has been returned\n'); 
 		return calendarDay;
+	}
+
+	date.getCalendarDate = function()
+	{
+		// console.log('getCalendarDay is being called'); 
+		var calendarDate;
+		calendarDate = localStorage.getItem('calendarDate');
+		if (calendarDate == null)
+		{
+			calendarDate = new Date();
+			localStorage.setItem('calendarDate', calendarDate);
+			console.log('No calendarDate set, Date Factory has set calendarDate into localstorage as' + calendarDate );
+		}
+		// console.log('getCalendarDay has been returned\n'); 
+		return calendarDate;
 	}
 
 	date.SetCalendarDateToNextMonth = function()
@@ -117,8 +143,15 @@ factory('DateFactory',['$log', function ($log) { //this should return a object t
 	    return day;
 	}
 
+	date.setCalendarDate = function(date)
+	{
+		var newDate = new Date(date);
+	    localStorage.setItem('calendarDate', newDate);	
+	    return newDate;
+	}
 
-	date.hoursInDay = ['12am', '1am', '2am', '3am', '4am','5am', '6am', '7am', '8am','9am', '10am', '11am', 'Noon','1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm']
+
+date.hoursInDay = [[0, '12 am'], [1,'1 am'], [2, '2 am'], [3,'3 am'], [4,'4 am'],[5, '5 am'], [6, '6 am'], [7, '7 am'], [8, '8 am'],[9, '9 am'], [10, '10 am'], [11, '11 am'], [12, 'Noon'],[13,'1 pm'], [14,'2 pm'], [15,'3 pm'], [16,'4 pm'], [17,'5 pm'], [18,'6 pm'], [19,'7 pm'], [20,'8 pm'], [21,'9 pm'], [22,'10 pm'], [23,'11 pm']]
 
 	date.sectionInHour = [':00', ':15', ':30', ':45'];
         
@@ -130,8 +163,7 @@ factory('MonthFactory', function ()
 	console.log('MonthFactory has been requested');
 	var MonthFactory = {};
 	MonthFactory.getMonths = function(year)
-	{
-		var monthsInYear = new Array;
+	{var monthsInYear = new Array;
 	    monthsInYear[0] = [31, "January", year];
 		monthsInYear[1] = [28, "February", year];
 		monthsInYear[2] = [31, "March", year];
@@ -159,7 +191,7 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 	DaysOfMonthFactory.getDaysofMonth = function(month, year, src)
 	{
 
-		console.log('getDaysofMonth is being called with month: ' + month + 'and year: ' + year + 'by src: ' + src); // This function should return a month object that fiills out a 35/42 day block; Gathers days from next and prev month as needed
+		// console.log('getDaysofMonth is being called with month: ' + month + 'and year: ' + year + 'by src: ' + src); // This function should return a month object that fiills out a 35/42 day block; Gathers days from next and prev month as needed
 		var month = month;
 		var year = year;
 		var monthsOfThisYear = MonthFactory.getMonths(year);
@@ -184,7 +216,8 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 					prevYear = year--;
 				}
 				var newDay = {};
-				newDay.date =  beforeFirstDay;
+				newDay.date = new Date(prevYear, prevMonth, beforeFirstDay);
+				newDay.day =  beforeFirstDay;
 				newDay.month =  monthsOfThisYear[prevMonth][1];
 				newDay.monthBlock = prevMonth;
 				newDay.year = prevYear;
@@ -197,12 +230,13 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 		for (var mday = 1; mday < daysinThisMonth +1; mday++) 
 		{
 			var newDay = {};
-			newDay.date = new Date(year, month, mday).getDate();
+			newDay.date = new Date(year, month, mday);
+			newDay.day = new Date(year, month, mday).getDate();
 			newDay.month = monthsOfThisYear[month][1];
 			newDay.monthBlock = month;
 			newDay.year = year;
 			newDay.yearBlock = year;
-			newDay.events = EventFactory.fetchDay(newDay.date, month, year, 'userEvents');
+			newDay.events = EventFactory.fetchDay(newDay.day, month, year, 'userEvents');
 			// newDay.events = [{title:'Event1', details:"Event 1 details" }, {title:'Event2', details:"Event 2 details" }, {title:'Event3', details:"Event 3 details" }];
 			newDay.weekday = DayNameService[new Date(year, month, mday).getDay()] ;
 			monthArray.push(newDay);
@@ -224,7 +258,8 @@ factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', '
 		for (var nday = 1; nday < daysneeded +1; nday++) 
 		{
 			var newDay = {};
-			newDay.date = new Date(nextYear, nextMonth, nday).getDate();
+			newDay.date = new Date(nextYear, nextMonth, nday);
+			newDay.day = new Date(nextYear, nextMonth, nday).getDate();
 			newDay.month = monthsOfThisYear[nextMonth][1];
 			newDay.monthBlock = nextMonth;
 			newDay.year = nextYear;
@@ -258,7 +293,7 @@ service("grid", ['MonthFactory', 'DateFactory', function (MonthFactory, DateFact
 		for (var i = 0; i < firstDayOfMonth; i++) 
 		{
 			var newDay = new Date(year--, 12, beforeFirstDay);
-			newDay.date =  beforeFirstDay;
+			newDay.day =  beforeFirstDay;
 			newDay.month =  "December";
 			days.unshift(newDay);
 			beforeFirstDay--;
@@ -279,7 +314,7 @@ service("grid", ['MonthFactory', 'DateFactory', function (MonthFactory, DateFact
 		for (var i = 0; i < firstDayOfMonth; i++) 
 		{
 			var newDay = new Date(new Date().getFullYear(), mon-1, beforeFirstDay);
-			newDay.date =  beforeFirstDay;
+			newDay.day =  beforeFirstDay;
 			newDay.month =  mon-1;
 			month.unshift(newDay);
 			beforeFirstDay--;
@@ -288,7 +323,7 @@ service("grid", ['MonthFactory', 'DateFactory', function (MonthFactory, DateFact
 		for (var mday = 1; mday < countOfDays +1; mday++) 
 		{
 			var newDay = new Date(year, mon, mday);
-			newDay.date = new Date(year, mon, mday).getDate();
+			newDay.day = new Date(year, mon, mday).getDate();
 			newDay.month = monthsInYear[mon][1];
 			days.push(newDay);
 			month.push(newDay);
@@ -321,7 +356,6 @@ service('EventStorageService', [ function () {
 		var yearValue = String(fullYearValue).slice(2);
 		if ( src in this.root)
 		{
-			console.log(fullYearValue);
 			var currentYear = new Date().getFullYear();
 			if ( parseInt(fullYearValue) < parseInt(currentYear) - 5 || parseInt(fullYearValue) > parseInt(currentYear) + 5  )
 			{
@@ -331,7 +365,7 @@ service('EventStorageService', [ function () {
 			{
 				if ( this.root[src][yearValue] != null )
 				{
-					console.log('year already in root');
+					// console.log('year already in root');
 					return false;	
 				}
 				
@@ -358,7 +392,7 @@ service('EventStorageService', [ function () {
 				{
 					if ( this.root[src][yearValue][parseInt(monthValue)] != null)
 					{
-						console.log("month already in root");
+						// console.log("month already in root");
 						return false;
 					}
 				}
@@ -386,7 +420,7 @@ service('EventStorageService', [ function () {
 					{
 						if ( this.root[src][ yearValue ][ parseInt(monthValue)][parseInt(dayValue)] != null)
 						{
-							console.log('day already in root');
+							// console.log('day already in root');
 							return false;
 						}
 					}
@@ -404,7 +438,6 @@ service('EventStorageService', [ function () {
 
 	EventStorage.addHour = function(hourValue, dayValue, monthValue, fullYearValue, src)
 	{
-		console.log(hourValue+" :" + dayValue);
 		var yearValue =  String(fullYearValue).slice(2);
 		if ( src in this.root)
 		{
@@ -422,7 +455,7 @@ service('EventStorageService', [ function () {
 						{
 							if ( this.root[src][ yearValue ][parseInt(monthValue)][parseInt(dayValue)][parseInt(hourValue)] != null)
 							{
-								console.log('hour already in root');
+								// console.log('hour already in root');
 								return false;
 							}
 						}
@@ -440,16 +473,14 @@ service('EventStorageService', [ function () {
 
 	EventStorage.addEvent = function (ev, cache) 
 	{
-		console.log(ev);
 		// this.root = JSON.parse(localStorage["root"]);
-		console.log(this.root);
+		console.log(ev);
 		if (angular.isArray(ev) )
 		{
-			console.log('ev is object');
 			var eventYear = new Date(ev['year'], ev['month']).getFullYear();
 			var eventMonth = new Date(ev['year'], ev['month']).getMonth();
 			var eventDay = new Date(ev['year'], ev['month'], ev['day']).getDate();
-			console.log("eventYear: " + eventYear + "eventMonth: " + eventMonth + "eventDay: " + eventDay)
+			// console.log("eventYear: " + eventYear + "eventMonth: " + eventMonth + "eventDay: " + eventDay)
 			this.addSrc(ev['src']);
 			this.addYear(eventYear, ev['src']);
 			this.addMonth(eventMonth, eventYear, ev['src']);
@@ -465,14 +496,12 @@ service('EventStorageService', [ function () {
 						{
 							if (ev['hour'] in this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay])
 							{
-								console.log('pushing event');
-								this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay][ev['hour']][ev['key']] = new Array;
-								this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay][ev['hour']][ev['key']]= ev;
+								// this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay][ev['hour']][ev['key']] = new Array;
+								this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay][ev['hour']].push(ev);
 								if (cache === true) 
 								{								
 									this.eventCache.push(ev['key']);
 									localStorage["eventCache"] = JSON.stringify(this.eventCache);
-									console.log(typeof(ev));
 									var data = {}; //values....
 									var objVal = {}; //other values....
 									var final = {};
@@ -484,7 +513,6 @@ service('EventStorageService', [ function () {
 									}
 									final[index] = objVal;
 									var evData = JSON.stringify(final);
-									console.log(evData);
 									localStorage.setItem(ev['key'], evData);	
 									console.log(this.root);		
 								}
@@ -552,13 +580,24 @@ service('EventStorageService', [ function () {
 
 	EventStorage.fetchDay = function(fetchDay, fetchMonth, fetchYear, src)
 	{
-		console.log(String(fetchYear).slice(2) );
-		console.log('fetchDay calle with Day: ' + fetchDay + ' Month: ' + fetchMonth + " Year: " + fetchYear);
+		// console.log('fetchDay calle with Day: ' + fetchDay + ' Month: ' + fetchMonth + " Year: " + fetchYear);
 		if ( angular.isDefined(this.root[src]) && angular.isDefined(this.root[src][ String(fetchYear).slice(2) ] )&& angular.isDefined(this.root[src][ String(fetchYear).slice(2) ][fetchMonth] ) )
 		{
 			if  (parseInt(fetchDay) in this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ] )
 			{
-				return this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ][ parseInt(fetchDay) ] ;	
+				var day = this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ][ parseInt(fetchDay)];
+				var hours = 23;
+				var hourWithEvents = [];
+				for (var i=0; i < hours; i++)
+				{
+					if (angular.isDefined(day[i]))
+					{
+						hourWithEvents.push(day[i]);
+					}
+				}
+				// console.log((hourWithEvents));
+				console.log(hourWithEvents);
+				return hourWithEvents;	
 			}
 		}
 		return null;
@@ -568,8 +607,6 @@ service('EventStorageService', [ function () {
 	{
 		var data = localStorage.getItem('eventCache');
 		EventStorage.eventCache = JSON.parse(data);
-		console.log('eventcache retrieved from storage');
-		console.log(EventStorage.eventCache);
 		for (var i = 0; i < EventStorage.eventCache.length; i++) 
 		{
 			// alert( i + ' : ' + EventStorage.eventCache.length);

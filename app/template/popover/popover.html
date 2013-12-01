@@ -1,4 +1,4 @@
-<div class="popover {{placement}}" ng-class="{ in: isOpen(), fade: animation() }">
+<div class="popover {{placement}} popForm" ng-class="{ in: isOpen(), fade: animation() }">
   <div class="arrow"></div>
 
   <div class="popover-inner">
@@ -6,3 +6,5 @@
       <div class="popover-content" ng-bind="content"></div>
   </div>
 </div>
+
+<select ng-model="start.hour"><option class="text-right" ng-repeat="hour in [12,1,2,3,4,5,6,7,8,9,10,11]" value="{{hour}}">{{hour}}</option></select><select ng-model="start.minute"><option value="0">:00</option><option value="15">:15</option><option value="30">:30</option><option value="45">:45</option></select><select ng-model="start.meridian" value="0"><option value="0">am</option><option value="12">pm</option></select><label for="start">Start Time</label><br><select ng-model="end.hour"><option class="text-right" ng-repeat="hour in [12,1,2,3,4,5,6,7,8,9,10,11]" value="{{hour}}">{{hour}}</option></select><select name="start" ng-model="end.minute"><option selected="selected" value="0">:00</option><option value="15">:15</option><option value="30">:30</option><option value="45">:45</option></select><select ng-model="end.meridian" value="0"><option value="0">am</option><option value="12">pm</option></select><label for="start">End Time</label><br>

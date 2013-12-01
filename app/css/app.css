@@ -66,7 +66,7 @@ body {
   position:relative;
   width:13.13%;
   margin-left:1%;
-  margin-bottom:1%;
+  margin-bottom:3%;
   height:30px;
   font-size: 1em;
   line-height: .5em;
@@ -218,8 +218,9 @@ p {
 
 .scrollContent {
   position: relative;
-  height: 115px;
+  height: 105px;
   overflow-y: auto;
+  overflow-x:hidden;
 }
 
 .scrollDayView {
@@ -246,3 +247,82 @@ p {
 .block {
   display: block;
 }
+
+.accordionFrame {
+  min-height: 200px;
+  max-height: 500px;
+}
+
+.dayLabel {
+  position:relative;
+  text-decoration: none;
+  width:100%; 
+  height:30px; 
+  top:-10px; 
+  background:#D2322D;
+  margin-bottom: -10px;
+  border-radius: 2px;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  }
+.dayLabel .mdate {
+
+  position: absolute;
+  top:-3px;
+  left:0px;
+  width:100%;
+  height:30px;
+  text-align: center;
+  line-height: 30px;
+}
+
+
+.dayLabel a {
+  position: relative;
+  text-decoration: none;
+  color:white;
+
+}
+
+.eventLine:hover {
+  background-color: white;
+  color:black;
+}
+
+.eventLine {
+  font-family: monaco;
+  width:97%;
+  font-size: 16px;
+  line-height: 6px;
+  height:16px;
+  color:white;
+  margin:2px 2px;
+  border-radius: 5px;
+  padding:5px;
+  white-space: nowrap;
+  overflow: ellipsis;
+  }
+
+.eventTitle {
+
+width: 60%;
+white-space: nowrap;
+overflow: hidden;
+overflow: ellipsis;
+padding:0px 5px;
+}
+
+.dayFooter {
+  position:relative;
+  text-decoration: none;
+  width:100%; 
+  height:20px; 
+  top:0px;
+  background-color: black;
+}
+
+#mForm {
+  background-color: transparent;
+}
+
+

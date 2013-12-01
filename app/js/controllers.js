@@ -71,8 +71,9 @@ controller('YearCtrl', ['$scope','grid', function YearCtrl($scope, grid) {
 	$scope.days = grid;
 }]).
 controller('MonthCtrl', 
-        ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactory', 'DateFactory','$location', '$route', '$log', 
-        function MonthCtrl($scope, $window, MonthFactory,  DaysOfMonthFactory, DateFactory, $location, $route, $log) {
+        ['$scope', '$window', 'MonthFactory', 'DaysOfMonthFactory', 'EventFactory', 'DateFactory','$location', '$route', '$log', 
+        function MonthCtrl($scope, $window, MonthFactory,  DaysOfMonthFactory, EventFactory, DateFactory, $location, $route, $log) {
+	
 	$scope.calendarMonth = DateFactory.getCalendarMonth();
 	$scope.today = {month: new Date().getMonth(), date : new Date().getDate(), year: new Date().getFullYear() };
 	$scope.monthsInYear = MonthFactory.getMonths($scope.calendarYear);
@@ -118,23 +119,41 @@ controller('MonthCtrl',
 		}
 	}
 
+	$scope.setCalendarDate = function(dt) {
+		console.log(dt);
+		DateFactory.setCalendarDate(dt);
+		DateFactory.setCalendarDay(dt.getDate());
+		DateFactory.setCalendarMonth(dt.getMonth());
+		DateFactory.setCalendarYear(dt.getFullYear());
+		// $scope.events = EventFactory.fetchDay($scope.calendarDay, $scope.calendarMonth, $scope.calendarYear, $scope.src);
+		// $scope.events = ['Event 1' + $scope.calendarDay, "Event 2" + $scope.calendarDay, "Event 3" + $scope.calendarDay];
+		// $route.reload();
+	};
+
 	$scope.go = function ( path ) {
 	$location.path( path );
 	}; 
 
 	$scope.popover = {
-		title: '{{day.month + " "+ day.date + ", " + day.year}}',
-		content: ' <form novalidate class="simple-form"><input type="text" placeholder="Title" ng-model="event.title" /><br />E-mail: <input type="email" ng-model="user.email" /><br />Gender: <input type="radio" ng-model="user.gender" value="male" />male<input type="radio" ng-model="user.gender" value="female" />female<br /><button ng-click="reset()">RESET</button><button ng-click="update(user)">SAVE</button></form>', 
+		title: '{{day.month + " "+ day.day + ", " + day.year}}',
+		content: '<form role="form" id="mForm" ng-submit="addEvent(ev)"><div class="form-group"><label for="title">Title</label><input type="title" class="form-control" id="title" ng-model="ev.title" placeholder="Enter Title"></div><div class="form-group"><label for="detail">Details</label><textarea class="form-control" ng-model="ev.details" rows="3" cols="30"></textarea></div><select ng-model="ev.startHour"><option class="text-right" ng-repeat="hour in [12,01,02,03,04,05,06,07,08,09,10,11]" value="{{hour}}">{{hour}}</option></select><select ng-model="ev.startMinute"><option value="0">:00</option><option value="15">:15</option><option value="30">:30</option><option value="45">:45</option></select><select ng-model="ev.startMeridian"><option value="0">am</option><option value="12">pm</option></select><label for="start">Start Time</label><br><select ng-model="ev.endHour"><option class="text-right" ng-repeat="hour in [12,1,2,3,4,5,6,7,8,9,10,11]" value="{{hour}}">{{hour}}</option></select><select name="end" ng-model="ev.endMinute"><option value="0">:00</option><option value="15">:15</option><option value="30">:30</option><option value="45">:45</option></select><select ng-model="ev.endMeridian"><option value="0">am</option><option value="12">pm</option></select><label for="start">End Time</label><br></div></div></div><button type="submit" class="btn btn-default" value="Submit">Submit</button></form>',
 		container: '#MonthView', 
 		placement:'auto', 
 		saved:false
 	};
+	$scope.ev = new Object;
+	$scope.ev.startHour=12;
+	$scope.ev.endHour=1;
+	$scope.ev.startMinute=0;
+	$scope.ev.endMinute=0;
+	$scope.ev.startMeridian = 0;
+	$scope.ev.endMeridian = 0;
 
 	$scope.eventpopover = {
-		title: '{{event.title}}',
+		title: '{{event[0]["title"]}}',
 		trigger: 'hover',
 		delay: { show: 1000, hide: 100 },
-		content: '<div style="width:200px; height:125px; position:relative; opacity:1; z-index:4;"  class=" slim"><div ng-input="day.year"></div>{{day.month + " "+ day.date}}</div>', 
+		content: '<div style="width:200px; height:125px; position:relative; opacity:1; z-index:4;"  class=" slim"><div ng-input="day.year"></div>{{event[0]["details"]}}</div>', 
 		container: '#MonthView', 
 		placement:'auto', 
 		saved:false
@@ -142,10 +161,52 @@ controller('MonthCtrl',
 
 	$scope.tooltip = {title: "Hello Tooltip<br />This is a multiline message!",checked: false}
 
-	$scope.addEvent = function(event) 
-	{
-		console.log(event.day.date)
-	};
+	$scope.addEvent = function(ev) {
+		if ( ev.title && ev.details) 
+	  	{
+	  		var startHour = parseInt(ev.startHour) + parseInt(ev.startMeridian);
+	  		if (startHour == 24){startHour = 12;}
+	  		else if (parseInt(startHour) == 12 && parseInt(ev.startMeridian) == 0)	{startHour = 0}
+	  		var endHour = parseInt(ev.endHour) + parseInt(ev.endMeridian);
+	  		if (endHour == 24){endHour = 12;}
+	  		else if (parseInt(endHour) == 12 && parseInt(ev.endMeridian) == 0) {endHour = 0}
+	  		if (parseInt(endHour) < parseInt(startHour)) {endHour = startHour}
+	  		if (parseInt(startHour) == parseInt(endHour) && parseInt(ev.endMinute) < parseInt(ev.startMinute)) {ev.endMinute = ev.startMinute};
+	  		var newEvent = new Array;
+	  		newEvent['key'] = Math.random().toString(36).substring(7);
+	  		newEvent['title'] = ev.title;
+	  		newEvent['details'] = ev.details;
+	  		newEvent['src'] = "userEvents";
+	  		var startTime = new Date(DateFactory.getCalendarYear(), DateFactory.getCalendarMonth(), DateFactory.getCalendarDay());
+	  		var endTime = startTime;
+	  		startTime = new Date(startTime.setHours(startHour, ev.startMinute));
+	  		endTime = new Date(endTime.setHours(endHour, ev.endMinute));
+	  		newEvent['start'] = startTime;
+	  		newEvent['end'] = endTime;
+	  		newEvent['hour'] = startTime.getHours();  		
+	  		newEvent['day'] = DateFactory.getCalendarDay();
+	  		newEvent['month'] = DateFactory.getCalendarMonth();
+	  		newEvent['year'] = DateFactory.getCalendarYear();  		
+			var result = EventFactory.addEvent(newEvent, true);
+			if (result === true) {
+				$route.reload();
+			}
+			console.log(result);
+	  	}
+	  }
+
+		$scope.hide = function() {
+		$('body').on('click', function (e) {
+		$('.popover').each(function () {
+		//the 'is' for buttons that trigger popups
+		//the 'has' for icons within a button that triggers a popup
+		// if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+		$('.popover').not(this).hide()
+		$(this).show();
+		// }
+		});
+		});
+		}
 
 
 }]).
@@ -154,7 +215,7 @@ controller('WeekCtrl', ['$scope', '$timeout', function WeekCtrl($scope, $timeout
 	$scope.dynamicPopoverText = "dynamic";
 	$scope.dynamicPopoverTitle = {
 	title: '{{day.month + " "+ day.date + ", " + day.year}}',
-	content: '<div style="width:200px; height:250px; position:relative; opacity:1; z-index:4;"  class=" slim"><div ng-input="day.year"></div>{{day.month + " "+ day.date}}</div>', 
+	content: '<form role="form" ng-submit="addEvent(ev)"><div class="form-group"><label for="title">Title</label><input type="title" class="form-control" id="title" ng-model="ev.title" placeholder="Enter Title"></div><div class="form-group"><label for="detail">Details</label><textarea class="form-control" ng-model="ev.details" rows="3" cols="30"></textarea></div></div><button type="submit" class="btn btn-default" value="Submit">Submit</button></form>',
 	container: '#MonthView', 
 	placement:'auto', 
 	saved:false};
@@ -247,18 +308,24 @@ controller('WeekCtrl', ['$scope', '$timeout', function WeekCtrl($scope, $timeout
 	var newItemNo = $scope.items.length + 1;
 	$scope.items.push('Item ' + newItemNo);
 	};
+
+
 }]).
 controller('DayCtrl', ['$scope','$route', 'DateFactory', 'EventFactory', function DayCtrl($scope, $route, DateFactory, EventFactory) {
-	$scope.source = 'userEvents';
+	$scope.src = 'userEvents';
 	$scope.hoursofday = DateFactory.hoursInDay;
 	$scope.hourSection = DateFactory.sectionInHour;
+
 	$scope.today = function() 
 	{
 		$scope.dt = new Date();
 	};
-	// $scope.events = ['Event 1', "Event 2", "Event 3"];
+	$scope.events = EventFactory.fetchDay($scope.calendarDay, $scope.calendarMonth, $scope.calendarYear, $scope.src);
 
-	$scope.today();
+	// $scope.today();
+	var cd = DateFactory.getCalendarDate();
+
+	$scope.dt = new Date(new Date(cd).getFullYear(), new Date(cd).getMonth(), new Date(cd).getDate());
 
 	$scope.showWeeks = false;
 
@@ -315,7 +382,7 @@ controller('DayCtrl', ['$scope','$route', 'DateFactory', 'EventFactory', functio
 	  };
 
 	  $scope.changed = function () {
-	    console.log('Time changed to: ' + $scope.mytime);
+	    // console.log('Time changed to: ' + $scope.mytime);
 	  };
 
 	  $scope.clear = function() {
@@ -325,15 +392,6 @@ controller('DayCtrl', ['$scope','$route', 'DateFactory', 'EventFactory', functio
 	$scope.$watch('dt', function() {
 	   $scope.updateCalendar($scope.dt)
 	});
-
-	$scope.updateCalendar = function(dt) {
-		$scope.calendarYear = DateFactory.setCalendarYear(new Date(dt).getFullYear());
-		$scope.calendarMonth = DateFactory.setCalendarMonth(new Date(dt).getMonth());
-		$scope.calendarDay = DateFactory.setCalendarDay(new Date(dt).getDate());
-		// $scope.events = EventFactory.fetchDay($scope.calendarDay, $scope.calendarMonth, $scope.calendarYear, '$scope.src');
-		$scope.events = ['Event 1' + $scope.calendarDay, "Event 2" + $scope.calendarDay, "Event 3" + $scope.calendarDay];
-		$scope.update();
-	};
 
 	$scope.ev = new Object;
 
@@ -359,6 +417,15 @@ controller('DayCtrl', ['$scope','$route', 'DateFactory', 'EventFactory', functio
 	  	}
 		
 	}
+
+	$scope.updateCalendar = function(dt) {
+		$scope.calendarYear = DateFactory.setCalendarYear(new Date(dt).getFullYear());
+		$scope.calendarMonth = DateFactory.setCalendarMonth(new Date(dt).getMonth());
+		$scope.calendarDay = DateFactory.setCalendarDay(new Date(dt).getDate());
+		$scope.events = EventFactory.fetchDay($scope.calendarDay, $scope.calendarMonth, $scope.calendarYear, $scope.src);
+		// $scope.events = ['Event 1' + $scope.calendarDay, "Event 2" + $scope.calendarDay, "Event 3" + $scope.calendarDay];
+		$scope.update();
+	};
 
 }]).
 controller('StorageCtrl', ['EventStorageService', function() {
