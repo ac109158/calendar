@@ -556,6 +556,7 @@ service('EventStorageService', [ function () {
 								for (var evt=0; evt <= hour.length; evt++) 
 								{
 									console.log(evt+ ' :evt');
+									console.log('the length of this hour array is ' + hour.length);
 									if (ev.key == hour[evt]['key'])
 									{
 										console.log('here');
@@ -570,8 +571,9 @@ service('EventStorageService', [ function () {
 										console.log(this.root);  
 
 									}
-									return true;
+									
 								}
+								return true;
 							}
 							else{console.log('hour not in this.root[src][year][month][day]')}
 						}
