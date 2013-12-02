@@ -292,7 +292,7 @@ p {
 .eventLine {
   font-family: monaco;
   width:97%;
-  font-size: 16px;
+  font-size: 10px;
   line-height: 6px;
   height:16px;
   color:white;
@@ -310,6 +310,17 @@ white-space: nowrap;
 overflow: hidden;
 overflow: ellipsis;
 padding:0px 5px;
+}
+
+.eventOption {
+  height:40px;
+  color:black;
+  width:100%;
+  padding: 10px;
+}
+
+.eventOption li {
+  height: 15px;
 }
 
 .dayFooter {

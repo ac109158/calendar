@@ -150,10 +150,10 @@ controller('MonthCtrl',
 	$scope.ev.endMeridian = 0;
 
 	$scope.eventpopover = {
-		title: '{{event[0]["title"]}}',
+		title: '{{event["title"]}}',
 		trigger: 'hover',
-		delay: { show: 1000, hide: 100 },
-		content: '<div style="width:200px; height:125px; position:relative; opacity:1; z-index:4;"  class=" slim"><div ng-input="day.year"></div>{{event[0]["details"]}}</div>', 
+		delay: { show: 1500, hide: 100 },
+		content: '<div style="width:200px; height:125px; position:relative; opacity:1; z-index:4;"  class=" slim"><div ng-input="day.year"></div>{{event["details"]}}</div>', 
 		container: '#MonthView', 
 		placement:'auto', 
 		saved:false
@@ -207,6 +207,19 @@ controller('MonthCtrl',
 		});
 		});
 		}
+
+
+
+	$scope.deleteEvent = function(ev, index) {
+		console.log(ev, index);
+		ev.index = index;
+		var result = EventFactory.deleteEvent(ev);
+		if (result === true) 
+		{
+		$route.reload();
+		}
+
+	}
 
 
 }]).

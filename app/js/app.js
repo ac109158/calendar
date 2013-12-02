@@ -474,7 +474,7 @@ service('EventStorageService', [ function () {
 	EventStorage.addEvent = function (ev, cache) 
 	{
 		// this.root = JSON.parse(localStorage["root"]);
-		console.log(ev);
+		// console.log(ev);
 		if (angular.isArray(ev) )
 		{
 			var eventYear = new Date(ev['year'], ev['month']).getFullYear();
@@ -532,30 +532,56 @@ service('EventStorageService', [ function () {
 		return false;
 	}
 
-	EventStorage.deleteEvent = function (event) 
+	EventStorage.deleteEvent = function (ev) 
 	{
-		if (angular.isObject(event) )
+		if (angular.isObject(ev) )
 		{
-			var eventYear = new Date(event.date).getFullYear();
-			var eventMonth = new Date(event.date).getMonth();
-			var eventDay = new Date(event.date).getMonth();
-			if ( event.src in this.root)
+			console.log(ev.src, this.root);
+			var eventYear = new Date(ev.start).getFullYear();
+			var eventMonth = new Date(ev.start).getMonth();
+			var eventDay = new Date(ev.start).getDate();
+			console.log(eventYear, eventMonth, eventYear);
+			if ( ev.src in this.root)
 			{				
-				if ( String(eventYear).slice(2)  in this.root[event.source]) 
+				if ( String(eventYear).slice(2)  in this.root[ev.src]) 
 				{
-					if (parseInt(eventMonth) in this.root[event.src][ String(eventYear).slice(2)  ]) 
+					if (parseInt(eventMonth) in this.root[ev.src][ String(eventYear).slice(2)  ]) 
 					{
-						if (eventDay in this.root[event.src][ String(eventYear).slice(2) ][eventMonth])
+						if (eventDay in this.root[ev.src][ String(eventYear).slice(2) ][eventMonth])
 						{
-							var eventPosition = array.indexOf(event.key);
-							if( eventPosition != -1) {
-								this.root[String(eventYear).slice(2) ][eventMonth][eventDay].splice(eventPosition, 1);
+							if (ev.hour in this.root[ev.src][ String(eventYear).slice(2) ][eventMonth][eventDay])
+							{
+								var hour = this.root[ev.src][ String(eventYear).slice(2) ][eventMonth][eventDay][ev.hour];
+								console.log(hour);
+								for (var evt=0; evt <= hour.length; evt++) 
+								{
+									console.log(evt+ ' :evt');
+									if (ev.key == hour[evt]['key'])
+									{
+										console.log('here');
+										this.root[ev.src][String(eventYear).slice(2) ][eventMonth][eventDay][ev.hour].splice(evt, 1);
+										localStorage.removeItem(ev.key);
+										var eventCache= localStorage.getItem('eventCache');
+										var eventCache =JSON.parse(eventCache);
+										var keyPosition = eventCache.indexOf(ev.key);
+										console.log(keyPosition);
+										eventCache.splice(keyPosition, 1);
+										localStorage["eventCache"] = JSON.stringify(eventCache);
+										console.log(this.root);  
+
+									}
+									return true;
+								}
 							}
-							return true;
+							else{console.log('hour not in this.root[src][year][month][day]')}
 						}
+						else{console.log('day not in this.root[src][year][month]')}
 					}
+					else{console.log('month not in this.root[src][year]')}
 				}
+				else{console.log('year not in source')}
 			}
+			else{console.log('src not in this.root')}
 		}
 		return false;
 	}
@@ -588,6 +614,7 @@ service('EventStorageService', [ function () {
 				var day = this.root[src][ String(fetchYear).slice(2) ][ parseInt(fetchMonth) ][ parseInt(fetchDay)];
 				var hours = 23;
 				var hourWithEvents = [];
+				var allEvents = [];
 				for (var i=0; i < hours; i++)
 				{
 					if (angular.isDefined(day[i]))
@@ -596,8 +623,16 @@ service('EventStorageService', [ function () {
 					}
 				}
 				// console.log((hourWithEvents));
-				console.log(hourWithEvents);
-				return hourWithEvents;	
+				console.log(hourWithEvents.length);
+				for (var hr=0; hr < hourWithEvents.length; hr++)
+				{
+					for (var evt=0; evt < hourWithEvents[hr].length; evt++)
+					{
+						allEvents.push(hourWithEvents[hr][evt]);
+					}
+				}
+				console.log(allEvents);
+				return allEvents;	
 			}
 		}
 		return null;

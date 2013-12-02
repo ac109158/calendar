@@ -11,23 +11,26 @@
 						  </div>
 				</div>
 
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 slim scrollContent "  >
-					<div class="eventLine"
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 slim scrollContent"  >
+					<div class="eventLine dropdown"
 					ng-if="day.events.length > 0 "
 					ng-repeat="event in day.events track by $index ">
-						<div bs-Popover="eventpopover" bs-Popover-trigger="mouseenter">
-							<span style="width:34%;" class="pull-left text-right"> {{event[0].start | date:'shortTime' | lowercase}}</span>
-							<span class="eventTitle">{{event[0]['title'].slice(0,17)}}</span>
-						<div>
+						<div class="dropdown-toggle" bs-Popover="eventpopover" bs-Popover-trigger="mouseenter">
+							<span style="width:34%;" class="pull-left text-right"> {{event.start | date:'shortTime' | lowercase}}</span>
+							<span class="eventTitle">{{event['title'].slice(0,17)}}</span>
+						</div>
+						<ul class="dropdown-menu eventOption" style="position:absolute; color:black">
+							<!-- <li>Edit</li> -->
+							<li ng-click="deleteEvent(event, $index)"><span class="badge badge-danger">Delete</span></li>
+						</ul>
 					</div>
 				</div>
 			</div>
 			<a ng-mouseenter="setCalendarDate(day.date)" ng-if="day.month != calendarMonthName" href="#/day" class=" vague col-xs-12 col-sm-12 col-md-12 col-lg-12  btn btn-default">
 				<span class="text-center" style="font-size: 10pt;">{{day.month.slice(0,3) + " " +  day.day}}</span>
 			</a>
-		</div>
-		<div class="row slim dayFooter">
-		</div>
+		<!-- <div class="row slim dayFooter">
+		</div> -->
 	</div
 <br>
 {{startHour}}
