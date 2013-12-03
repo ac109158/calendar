@@ -160,7 +160,6 @@ return date;
 }]).
 factory('MonthFactory', function ()
 {  // This should  create an array of each month, and numbers of days in that month for a given year
-	console.log('MonthFactory has been requested');
 	var MonthFactory = {};
 	MonthFactory.getMonths = function(year)
 	{var monthsInYear = new Array;
@@ -182,7 +181,6 @@ factory('MonthFactory', function ()
 		}
 	    	return monthsInYear;
 	 }
-	 console.log('MonthFactory has been returned\n');
 	 return MonthFactory;
 }).
 factory('DaysOfMonthFactory',['MonthFactory', 'DateFactory', 'DayNameService', 'EventFactory', function (MonthFactory, DateFactory, DayNameService, EventFactory) {
@@ -335,7 +333,6 @@ service("grid", ['MonthFactory', 'DateFactory', function (MonthFactory, DateFact
 	return days;
 }]).
 service('EventStorageService', [ function () {
-	console.log('EventStorageService being called');
 	var EventStorage = {};
 	EventStorage.root = [];
 	EventStorage.eventCache=[];
@@ -347,7 +344,6 @@ service('EventStorageService', [ function () {
 			return false;
 		}
 		this.root[src] = new Array;
-		console.log(src + ' added to root');
 		return true;
 	}
 
@@ -475,7 +471,7 @@ service('EventStorageService', [ function () {
 	{
 		// this.root = JSON.parse(localStorage["root"]);
 		// console.log(ev);
-		if (angular.isArray(ev) )
+		if (angular.isObject(ev) )
 		{
 			var eventYear = new Date(ev['year'], ev['month']).getFullYear();
 			var eventMonth = new Date(ev['year'], ev['month']).getMonth();
@@ -496,25 +492,20 @@ service('EventStorageService', [ function () {
 						{
 							if (ev['hour'] in this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay])
 							{
-								// this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay][ev['hour']][ev['key']] = new Array;
 								this.root[ev['src']][ String(eventYear).slice(2) ][eventMonth][eventDay][ev['hour']].push(ev);
 								if (cache === true) 
 								{								
 									this.eventCache.push(ev['key']);
 									localStorage["eventCache"] = JSON.stringify(this.eventCache);
-									var data = {}; //values....
-									var objVal = {}; //other values....
-									var final = {};
+									var final = {}; // this loops is in place because there is a challenge with json an the ev object
 									var index = 1;
 									for(var key in ev)
 									{
-									    final[index] = ev[key];
-									    index = index + 1;
+										final[key] = ev[key];
+										index = index + 1;
 									}
-									final[index] = objVal;
 									var evData = JSON.stringify(final);
 									localStorage.setItem(ev['key'], evData);	
-									console.log(this.root);		
 								}
 								return true;
 							}
@@ -552,14 +543,11 @@ service('EventStorageService', [ function () {
 							if (ev.hour in this.root[ev.src][ String(eventYear).slice(2) ][eventMonth][eventDay])
 							{
 								var hour = this.root[ev.src][ String(eventYear).slice(2) ][eventMonth][eventDay][ev.hour];
-								console.log(hour);
 								for (var evt=0; evt <= hour.length; evt++) 
 								{
-									console.log(evt+ ' :evt');
-									console.log('the length of this hour array is ' + hour.length);
 									if (ev.key == hour[evt]['key'])
 									{
-										console.log('here');
+										console.log(hour);
 										this.root[ev.src][String(eventYear).slice(2) ][eventMonth][eventDay][ev.hour].splice(evt, 1);
 										localStorage.removeItem(ev.key);
 										var eventCache= localStorage.getItem('eventCache');
@@ -624,8 +612,6 @@ service('EventStorageService', [ function () {
 						hourWithEvents.push(day[i]);
 					}
 				}
-				// console.log((hourWithEvents));
-				console.log(hourWithEvents.length);
 				for (var hr=0; hr < hourWithEvents.length; hr++)
 				{
 					for (var evt=0; evt < hourWithEvents[hr].length; evt++)
@@ -633,7 +619,6 @@ service('EventStorageService', [ function () {
 						allEvents.push(hourWithEvents[hr][evt]);
 					}
 				}
-				console.log(allEvents);
 				return allEvents;	
 			}
 		}
@@ -650,18 +635,18 @@ service('EventStorageService', [ function () {
 			var index = EventStorage.eventCache[i];
 			index = localStorage.getItem(index);
 			index = JSON.parse(index);
-			var newEvent = new Array;
-			newEvent['key'] = index[1];
-	  		newEvent['title'] = index[2];
-	  		newEvent['details'] = index[3];
-	  		newEvent['src'] = index[4];
-	  		newEvent['start'] = index[5];
-	  		newEvent['end'] = index[6];
-	  		newEvent['hour'] = index[7];
-	  		newEvent['day'] = index[8];
-	  		newEvent['month'] = index[9];
-	  		newEvent['year'] = index[10];
-	  		EventStorage.addEvent(newEvent, false);
+			// var newEvent = new Array;
+			// newEvent['key'] = index['key'];
+	  // 		newEvent['title'] = index['title'];
+	  // 		newEvent['details'] = index['title'];
+	  // 		newEvent['src'] = index['src'];
+	  // 		newEvent['start'] = index['start'];
+	  // 		newEvent['end'] = index['end'];
+	  // 		newEvent['hour'] = index['hour'];
+	  // 		newEvent['day'] = index['day'];
+	  // 		newEvent['month'] = index['month'];
+	  // 		newEvent['year'] = index['year'];
+	  		EventStorage.addEvent(index, false);
 		}		
 	}
 	else {

@@ -120,7 +120,6 @@ controller('MonthCtrl',
 	}
 
 	$scope.setCalendarDate = function(dt) {
-		console.log(dt);
 		DateFactory.setCalendarDate(dt);
 		DateFactory.setCalendarDay(dt.getDate());
 		DateFactory.setCalendarMonth(dt.getMonth());
@@ -191,7 +190,6 @@ controller('MonthCtrl',
 			if (result === true) {
 				$route.reload();
 			}
-			console.log(result);
 	  	}
 	  }
 
